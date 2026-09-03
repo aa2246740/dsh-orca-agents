@@ -1,0 +1,17 @@
+{
+  "name": "dsh-orca-agents",
+  "version": "0.1.0",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aa2246740/dsh-orca-agents.git"
+  },
+  "type": "module",
+  "description": "Dispatch coding agents into the local Orca desktop from DSH chat.",
+  "main": "./src/dsh-orca-agents.ts",
+  "exports": {
+    ".": "./src/dsh-orca-agents.ts",
+    "./package.json": "./package.json"
+  }
+}

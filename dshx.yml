@@ -1,0 +1,5 @@
+id: dsh-orca-agents
+entry: src/dsh-orca-agents.ts
+marker: "[my-plugins/dsh-orca-agents] loaded"
+kind: tool
+profile: web
