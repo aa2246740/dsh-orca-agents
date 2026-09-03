@@ -7,5 +7,6 @@ node_modules
 *.jpg
 *.jpeg
 *.zip
+*.tgz
 *.jsonl
 tests/*-launch.json

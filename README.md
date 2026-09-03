@@ -6,7 +6,7 @@ DSH 对话里的 Agent 当调度器，本机 [Orca](https://orca.computer) 当�
 
 ```text
 你 ──说话──► DSH Agent
-                 │  这个插件（defineTool + skill）
+                 │  这个插件
                  ▼
             orca CLI  ──►  Orca.app
                               └── 隔离 worktree 里的 grok/codex/…
@@ -19,44 +19,40 @@ DSH 对话里的 Agent 当调度器，本机 [Orca](https://orca.computer) 当�
 同一台机器上：
 
 1. **Orca 桌面**，终端里 `orca status --json` 能通（测过 1.4.193）
-2. **DSH Web**（能加载 profile 插件，Harness / Local Build 均可）
-3. **这个插件** 挂进 DSH 的 web profile
-4. **至少一种工人**：`grok` / `codex` / `claude` / `cursor` / `agy`，Orca 认得出
-5. **git**（默认会建空项目）
+2. **DSH Web** 和官方 `dsh` CLI（能执行 `dsh plugin add`）
+3. **至少一种工人**：`grok` / `codex` / `claude` / `cursor` / `agy`，Orca 认得出
+4. **本机 git 命令**（派活会 `git init` 空项目）。不要 GitHub 账号，也不要 remote
 
-不需要：orcaBot MCP、dsh-ade、自己会写 `orca worktree create`。
+不需要：orcaBot MCP、dsh-ade、自己会写 `orca worktree create`、手改 DSH 源码。
 
 监督路径（「盯着做完告诉我」）才用 Orca Settings → Experimental。普通派活不用。
 
 ## 安装
 
-插件是 DSH 的 server tool 插件，不是 Orca skill。
+官方口，不要手改 profile：
 
 ```sh
-git clone https://github.com/aa2246740/dsh-orca-agents.git
+dsh plugin --profile web add github:aa2246740/dsh-orca-agents
 ```
 
-在 DSH web profile（通常 `~/.dsh/profiles/web`）加上依赖，并写入 watched patch：
+本地目录或 tarball 也可以：
 
-`package.json`：
-
-```json
-"dsh-orca-agents": "link:/absolute/path/to/dsh-orca-agents"
+```sh
+dsh plugin --profile web add ./dsh-orca-agents
+dsh plugin --profile web add ./dsh-orca-agents-0.2.0.tgz
 ```
 
-`cordis.patch.yml` 追加：
-
-```yaml
-- insert:
-    - id: dsh-orca-agents
-      name: dsh-orca-agents
-```
-
-新开一个 DSH 会话。说：
+`dsh.bundle` 是开机捕获的。装完**重启一次 DSH**。新开会话，说：
 
 > 用 Orca 让 grok 做个天气网页
 
-若本机有 dshx：`dshx check dsh-orca-agents`，再按 `activation-plan --change patch` 热挂。不要为这个插件重启 DSH。
+不要再往 profile 的 `cordis.patch.yml` 手写同一条 insert，会重复挂载。
+
+卸：
+
+```sh
+dsh plugin --profile web remove dsh-orca-agents
+```
 
 ## 行为
 
@@ -67,7 +63,7 @@ git clone https://github.com/aa2246740/dsh-orca-agents.git
 
 ## 隐私
 
-插件只在本机调 `orca` CLI，不把对话发到仓库作者或其它服务器。公开仓库只含源码。不要提交 DSH 会话导出、截图、`.env`、Orca worktree。
+插件只在本机调 `orca` CLI，不把对话发到仓库作者或其它服务器。公开仓库只含源码和编译入口。不要提交 DSH 会话导出、截图、`.env`、Orca worktree。
 
 ## 许可
 
