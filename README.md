@@ -1,5 +1,13 @@
 # dsh-orca-agents
 
+```sh
+dsh plugin --profile web add github:aa2246740/dsh-orca-agents
+```
+
+PATH 上要有官方 `dsh`（没有就用 `npx @deepseek-ai/dsh`）和 **pnpm**。`dsh plugin add` 会在 `$DSH_HOME/profiles/web` 里跑 pnpm。仓库已提交编译好的 `lib/`，git 安装不用 `prepare`，也不用改 profile 的 `allowBuilds`。
+
+然后重启这个 Host，再刷新页面。`dsh plugin add` 只写 profile，不会热挂正在跑的进程。
+
 DSH 对话里的 Agent 当调度器，本机 [Orca](https://orca.computer) 当执行面：新建空项目，派 Grok / Codex / Claude / Cursor / Antigravity，盯 Orca Stop hook，干完叫醒 DSH。
 
 工人跑在 Orca 里，不跑在 DSH 的终端里。
@@ -19,26 +27,22 @@ DSH 对话里的 Agent 当调度器，本机 [Orca](https://orca.computer) 当�
 同一台机器上：
 
 1. Orca 桌面，终端里 `orca status --json` 能通。测过 1.4.193。
-2. DSH Web 和官方 `dsh` CLI，能执行 `dsh plugin add`。
+2. DeepSeek Harness **0.1.5-rc.2** Web、官方 `dsh` CLI、**pnpm**。
 3. 至少一种工人：`grok` / `codex` / `claude` / `cursor` / `agy`，Orca 认得出。
 4. 本机 git 命令。派活会 `git init` 空项目。不要 GitHub 账号，也不要 remote。
 
 监督路径「盯着做完告诉我」才用 Orca Settings → Experimental。普通派活不用。
 
-## 安装
+## 其它装法
 
-```sh
-dsh plugin --profile web add github:aa2246740/dsh-orca-agents
-```
-
-本地目录或 tarball 也可以：
+本地目录或 tarball：
 
 ```sh
 dsh plugin --profile web add ./dsh-orca-agents
 dsh plugin --profile web add ./dsh-orca-agents-0.2.0.tgz
 ```
 
-`dsh.bundle` 是开机捕获的。装完重启一次 DSH。新开会话再说。不要再往 profile 的 `cordis.patch.yml` 手写同一条 insert，会重复挂载。
+`dsh.bundle` 是开机捕获的。不要再往 profile 的 `cordis.patch.yml` 手写同一条 insert，会重复挂载。
 
 ```sh
 dsh plugin --profile web remove dsh-orca-agents
