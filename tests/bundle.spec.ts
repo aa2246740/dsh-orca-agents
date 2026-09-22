@@ -32,6 +32,18 @@ test('published entry is compiled javascript', () => {
   assert.match(js, /\binject\b/)
 })
 
+test('rc.3 peers stay wildcards and the README names that harness', () => {
+  const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {
+    peerDependencies?: Record<string, string>
+  }
+  assert.equal(pkg.peerDependencies?.['@deepseek-ai/dsh-skill'], '*')
+  assert.equal(pkg.peerDependencies?.['@deepseek-ai/dsh-tools'], '*')
+  const readme = readFileSync(join(root, 'README.md'), 'utf8')
+  assert.match(readme, /0\.1\.5-rc\.3/)
+  assert.doesNotMatch(readme, /0\.1\.5-rc\.2/)
+  assert.doesNotMatch(readme, /0\.1\.7/)
+})
+
 test('README leads with the stock dsh plugin add command', () => {
   const readme = readFileSync(join(root, 'README.md'), 'utf8')
   const lead = readme.slice(0, readme.indexOf('\n## '))
