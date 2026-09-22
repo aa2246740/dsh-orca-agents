@@ -27,7 +27,7 @@ DSH 对话里的 Agent 当调度器，本机 [Orca](https://orca.computer) 当�
 同一台机器上：
 
 1. Orca 桌面，终端里 `orca status --json` 能通。测过 1.4.193。
-2. DeepSeek Harness **0.1.5-rc.2** Web、官方 `dsh` CLI、**pnpm**。
+2. DeepSeek Harness **0.1.5-rc.3** Web、官方 `dsh` CLI、**pnpm**。
 3. 至少一种工人：`grok` / `codex` / `claude` / `cursor` / `agy`，Orca 认得出。
 4. 本机 git 命令。派活会 `git init` 空项目。不要 GitHub 账号，也不要 remote。
 
