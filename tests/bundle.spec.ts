@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { satisfies } from 'semver'
 import { test } from 'node:test'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -30,6 +31,23 @@ test('published entry is compiled javascript', () => {
   assert.match(js, /\[my-plugins\/dsh-orca-agents\] loaded/)
   assert.match(js, /\bapply\b/)
   assert.match(js, /\binject\b/)
+})
+
+test('Harness peers accept 0.1.5-rc.3 and exclude 0.1.7-alpha', () => {
+  const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {
+    peerDependencies?: Record<string, string>
+  }
+  const skill = pkg.peerDependencies?.['@deepseek-ai/dsh-skill']
+  const tools = pkg.peerDependencies?.['@deepseek-ai/dsh-tools']
+  const cordis = pkg.peerDependencies?.['@deepseek-ai/cordis']
+  assert.equal(skill, '^0.1.5-rc.2')
+  assert.equal(tools, '^0.1.5-rc.2')
+  assert.equal(cordis, '4.0.2')
+  assert.equal(satisfies('0.1.5-rc.3', '^0.1.5-rc.2'), true)
+  assert.equal(satisfies('0.1.5-rc.3', '^0.1.2-rc.1'), false)
+  assert.equal(satisfies('0.1.7-alpha.2', '^0.1.5-rc.2'), false)
+  assert.equal(satisfies('0.1.7-alpha.2', skill ?? ''), false)
+  assert.equal(satisfies('0.1.5-rc.3', tools ?? ''), true)
 })
 
 test('README leads with the stock dsh plugin add command', () => {
